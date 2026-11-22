@@ -23,7 +23,7 @@ const AboutPage = () => {
       <div className="info-card">
         <h3>☕ Judul Proyek</h3>
         <p className="project-title">
-          <strong>BrewBook: Katalog Menu dan Kedai Kopi Berbasis PWA</strong>
+          <strong>Coffee Space: Katalog Menu dan Kedai Kopi Berbasis PWA</strong>
         </p>
         <p className="project-desc">
           Aplikasi katalog digital interaktif untuk eksplorasi aneka varian kopi dan rekomendasi kedai kopi di Kota Semarang. Dirancang menggunakan arsitektur Progressive Web App (PWA) agar dapat diakses secara cepat, responsif, dan mendukung mode offline.

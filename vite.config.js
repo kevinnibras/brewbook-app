@@ -10,11 +10,11 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icon-192.png', 'icon-512.png'],
       manifest: {
-        name: 'BrewBook - Katalog Menu dan Kedai Kopi',
-        short_name: 'BrewBook',
+        name: 'Coffee Space - Katalog Menu dan Kedai Kopi',
+        short_name: 'Coffee Space',
         description: 'Katalog Menu dan Kedai Kopi Berbasis PWA',
-        theme_color: '#4A2C11',
-        background_color: '#F7F3EE',
+        theme_color: '#FAF6F0',
+        background_color: '#FAF6F0',
         display: 'standalone',
         start_url: '/',
         icons: [

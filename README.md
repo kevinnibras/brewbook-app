@@ -16,13 +16,16 @@ BrewBook App adalah aplikasi web berbasis PWA bertema kopi modern yang menyajika
 
 ## Fitur Utama & Ketentuan Wajib
 - [x] **API Buatan Sendiri**: Terhubung dengan RESTful API `brewbook-api` via Axios.
-- [x] **Bottom Navigation Bar**: 3 tab (Menu, Kedai, About) yang tetap aktif saat berada di sub-halaman/detail.
-- [x] **Minimal 5 Halaman**:
-  1. Halaman Menu Kopi (`/`)
-  2. Halaman Detail Menu Kopi (`/menu/:id`)
-  3. Halaman Daftar Kedai Kopi (`/kedai`)
-  4. Halaman Detail Kedai Kopi (`/kedai/:id`)
-  5. Halaman Profil / About (`/about`)
+- [x] **Bottom Navigation Bar**: 5 tab (Beranda, Menu, Kedai, Favorit, Profil) yang responsif dan tetap aktif saat berada di sub-halaman/detail.
+- [x] **7 Halaman Lengkap (Melampaui Ketentuan Minimal 5 Halaman)**:
+  1. Halaman Beranda / Home (`/`)
+  2. Halaman Katalog Menu Kopi (`/menu`)
+  3. Halaman Detail Menu Kopi (`/menu/:id`)
+  4. Halaman Daftar Kedai Kopi (`/kedai`)
+  5. Halaman Detail Kedai Kopi (`/kedai/:id`)
+  6. Halaman Koleksi Favorit (`/favorit`)
+  7. Halaman Profil User (`/profile`) (menggantikan Halaman About)
+- [x] **Fitur Tambahan Favorit & Pencarian**: Simpan menu dan kedai favorit ke LocalStorage (bekerja penuh secara offline) serta fitur filter & search.
 - [x] **List & Detail Interaktif**: Klik pada item menu atau kedai membuka halaman detail lengkap.
 - [x] **Full PWA Experience**:
   - `manifest.webmanifest` lengkap dengan nama, ikon 192px & 512px (termasuk maskable), warna tema `#4A2C11`, dan display `standalone`.

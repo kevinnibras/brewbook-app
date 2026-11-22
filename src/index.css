@@ -1,0 +1,52 @@
+/* =======================================================
+   BrewBook Global Styles - Coffee Palette & Mobile First
+   Kevin Nibras Kusuma (21120124140131)
+   ======================================================= */
+
+:root {
+  --color-primary: #4A2C11;        /* Cokelat Kopi Utama */
+  --color-primary-dark: #2E1807;   /* Espresso Gelap */
+  --color-primary-light: #6F4522;  /* Kopi Sedang */
+  --color-accent: #C88A35;         /* Karamel / Emas */
+  --color-accent-light: #F4E8D7;   /* Busa Susu / Krim */
+  --color-bg: #F8F5F0;             /* Latar Belakang Hangat */
+  --color-surface: #FFFFFF;        /* Kartu & Modal */
+  --color-text-main: #2B231D;      /* Teks Utama */
+  --color-text-muted: #7A6F66;     /* Teks Sekunder */
+  --color-border: #E8DFD5;         /* Garis Batas */
+  --shadow-sm: 0 2px 8px rgba(74, 44, 17, 0.06);
+  --shadow-md: 0 4px 16px rgba(74, 44, 17, 0.10);
+  --shadow-lg: 0 8px 24px rgba(74, 44, 17, 0.14);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-attachment: fixed;
+}
+
+#root {
+  width: 100%;
+  max-width: 520px; /* Desain Mobile-First yang elegan di layar besar */
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}

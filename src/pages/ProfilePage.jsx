@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '../context/FavoritesContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const DEFAULT_COFFEE_IMAGE = 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80';
 const DEFAULT_CAFE_IMAGE = 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80';
@@ -8,20 +9,15 @@ const DEFAULT_CAFE_IMAGE = 'https://images.unsplash.com/photo-1509042239860-f550
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { favoriteMenus, favoriteCafes } = useFavorites();
+  const { currentUser, updateProfile, logout } = useAuth();
+
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [copied, setCopied] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // State profil pengguna yang tersimpan di localStorage
-  const [userName, setUserName] = useState(() => {
-    return localStorage.getItem('coffee_space_user_name') || 'Kevin Nibras Kusuma';
-  });
-  const [userBio, setUserBio] = useState(() => {
-    return localStorage.getItem('coffee_space_user_bio') || 'Pencinta aroma kopi otentik dan penjelajah kedai kopi nusantara.';
-  });
-  const [userEmail, setUserEmail] = useState(() => {
-    return localStorage.getItem('coffee_space_user_email') || 'kevin.nibras@coffeespace.id';
-  });
+  const userName = currentUser?.name || 'Kevin Nibras Kusuma';
+  const userBio = currentUser?.bio || 'Pencinta aroma kopi otentik dan penjelajah kedai kopi nusantara.';
+  const userEmail = currentUser?.email || 'kevin.nibras@coffeespace.id';
 
   // State Modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -31,6 +27,15 @@ const ProfilePage = () => {
   const [tempName, setTempName] = useState(userName);
   const [tempBio, setTempBio] = useState(userBio);
   const [tempEmail, setTempEmail] = useState(userEmail);
+
+  // Sinkronkan form temp jika currentUser berubah
+  useEffect(() => {
+    if (currentUser) {
+      setTempName(currentUser.name);
+      setTempBio(currentUser.bio || '');
+      setTempEmail(currentUser.email);
+    }
+  }, [currentUser]);
 
   // Deteksi koneksi jaringan
   useEffect(() => {
@@ -77,19 +82,19 @@ const ProfilePage = () => {
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
-    setUserName(tempName);
-    setUserBio(tempBio);
-    setUserEmail(tempEmail);
-    localStorage.setItem('coffee_space_user_name', tempName);
-    localStorage.setItem('coffee_space_user_bio', tempBio);
-    localStorage.setItem('coffee_space_user_email', tempEmail);
+    updateProfile({
+      name: tempName,
+      email: tempEmail,
+      bio: tempBio
+    });
     setIsEditModalOpen(false);
     showToast('Profil Anda berhasil diperbarui!');
   };
 
   const handleLogout = () => {
     setIsLogoutModalOpen(false);
-    showToast('Anda telah berhasil keluar dari akun.');
+    logout();
+    navigate('/login', { replace: true });
   };
 
   // Inisial avatar
@@ -153,11 +158,6 @@ const ProfilePage = () => {
               <div className="stat-box" onClick={() => navigate('/favorit')} role="button" tabIndex={0} title="Buka Kedai Disimpan">
                 <span className="stat-number">{favoriteCafes.length}</span>
                 <span className="stat-label">Kedai Disimpan</span>
-              </div>
-              <div className="stat-divider"></div>
-              <div className="stat-box">
-                <span className="stat-number">VIP</span>
-                <span className="stat-label">Member</span>
               </div>
             </div>
           </div>

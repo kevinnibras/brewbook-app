@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const DesktopNavbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const { currentUser } = useAuth();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
@@ -25,6 +27,15 @@ const DesktopNavbar = () => {
   const isCafeActive = currentPath.startsWith('/kedai');
   const isFavActive = currentPath.startsWith('/favorit');
   const isProfileActive = currentPath === '/profile' || currentPath === '/about';
+
+  const getInitials = (name) => {
+    if (!name) return 'CS';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return parts[0].substring(0, 2).toUpperCase();
+  };
 
   return (
     <header className="desktop-navbar">
@@ -123,9 +134,9 @@ const DesktopNavbar = () => {
             tabIndex={0}
             title="Profil Pengguna"
           >
-            <div className="user-pill-avatar">KN</div>
+            <div className="user-pill-avatar">{getInitials(currentUser?.name)}</div>
             <div className="user-pill-info">
-              <span className="user-pill-name">Kevin Nibras</span>
+              <span className="user-pill-name">{currentUser?.name?.split(' ')[0] || 'Pengguna'}</span>
               <span className="user-pill-nim">Coffee Enthusiast</span>
             </div>
           </div>

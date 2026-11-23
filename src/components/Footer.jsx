@@ -30,18 +30,17 @@ const Footer = () => {
           </div>
 
           <div className="footer-info-group">
-            <h4>Akademik & Proyek</h4>
-            <p><strong>Praktikum PPB 2026</strong></p>
-            <p>Teknik Komputer Universitas Diponegoro</p>
-            <p className="footer-author">Pengembang: <strong>Kevin Nibras Kusuma</strong> (21120124140131)</p>
+            <h4>Tentang Coffee Space</h4>
+            <p>Katalog panduan kedai kopi otentik dan kurasi racikan spesialti terbaik di Kota Semarang.</p>
+            <p className="footer-author">Semarang, Jawa Tengah</p>
             <div className="footer-pwa-badge">
-              <span>⚡ PWA Offline Ready • React 19 + Express</span>
+              <span>☕ Nikmati Kopi Terbaik Setiap Hari</span>
             </div>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Coffee Space. Dibuat untuk Tugas Akhir Praktikum Pengembangan Perangkat Bergerak.</p>
+          <p>© {new Date().getFullYear()} Coffee Space. Semarang Coffee Catalog & Community.</p>
         </div>
       </div>
     </footer>

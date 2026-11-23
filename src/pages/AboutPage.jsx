@@ -4,9 +4,9 @@ const AboutPage = () => {
   return (
     <div className="page-container about-container">
       <header className="page-header text-center">
-        <span className="brand-badge">Profil Mahasiswa</span>
+        <span className="brand-badge">Coffee Space Team</span>
         <h1>Tentang Pengembang</h1>
-        <p className="header-subtitle">Tugas Akhir Praktikum Pengembangan Perangkat Bergerak</p>
+        <p className="header-subtitle">Semarang Coffee Catalog & Community Platform</p>
       </header>
 
       {/* Kartu Profil */}
@@ -15,8 +15,8 @@ const AboutPage = () => {
           <span>KN</span>
         </div>
         <h2 className="profile-name">Kevin Nibras Kusuma</h2>
-        <p className="profile-nim">NIM: 21120124140131</p>
-        <span className="profile-badge">Teknik Komputer - Praktikum PPB</span>
+        <p className="profile-nim">Creator & Coffee Enthusiast</p>
+        <span className="profile-badge">Lead Developer</span>
       </div>
 
       {/* Informasi Proyek */}

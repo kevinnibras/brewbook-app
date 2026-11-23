@@ -7,20 +7,6 @@ const DesktopNavbar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const { currentUser } = useAuth();
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
 
   const isHomeActive = currentPath === '/' || currentPath === '/beranda';
   const isMenuActive = currentPath.startsWith('/menu');
@@ -120,13 +106,8 @@ const DesktopNavbar = () => {
           </button>
         </nav>
 
-        {/* Right Section: Online Status & User Pill */}
+        {/* Right Section: User Pill */}
         <div className="desktop-nav-actions">
-          <span className={`network-pill ${isOnline ? 'online' : 'offline'}`}>
-            <span className="dot"></span>
-            {isOnline ? 'Online' : 'Offline'}
-          </span>
-
           <div
             className="user-pill-btn"
             onClick={() => navigate('/profile')}

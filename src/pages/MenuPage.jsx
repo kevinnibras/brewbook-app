@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMenus } from '../hooks/useMenus.js';
 import { useFavorites } from '../context/FavoritesContext.jsx';
@@ -16,6 +16,8 @@ const MenuPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(catParam);
   const [selectedCafe, setSelectedCafe] = useState('Semua');
+  const [isCafeDropdownOpen, setIsCafeDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const formatRupiah = (number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -25,16 +27,52 @@ const MenuPage = () => {
     }).format(number || 0);
   };
 
-  // Ambil daftar unik kedai kopi untuk opsi filter cepat
+  // Ambil daftar unik kedai kopi beserta jumlah menunya untuk opsi filter
   const uniqueCafes = useMemo(() => {
     const cafeMap = new Map();
     menus.forEach((m) => {
-      if (m.cafes?.id && m.cafes?.name) {
-        cafeMap.set(m.cafes.id, m.cafes.name);
+      const cafeId = m.cafes?.id || m.cafe_id;
+      const cafeName = m.cafes?.name;
+      if (cafeId && cafeName) {
+        if (!cafeMap.has(cafeId)) {
+          cafeMap.set(cafeId, { id: cafeId, name: cafeName, count: 0 });
+        }
+        cafeMap.get(cafeId).count += 1;
       }
     });
-    return Array.from(cafeMap.entries()).map(([id, name]) => ({ id, name }));
+    return Array.from(cafeMap.values()).sort((a, b) => a.name.localeCompare(b.name));
   }, [menus]);
+
+  // Objek kedai yang sedang aktif dipilih
+  const selectedCafeObj = useMemo(() => {
+    if (selectedCafe === 'Semua') return null;
+    return uniqueCafes.find((c) => c.id === selectedCafe);
+  }, [selectedCafe, uniqueCafes]);
+
+  // Menutup dropdown saat klik di luar area atau tekan Escape
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsCafeDropdownOpen(false);
+      }
+    };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsCafeDropdownOpen(false);
+      }
+    };
+
+    if (isCafeDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isCafeDropdownOpen]);
 
   // Filter menu berdasarkan query pencarian, kategori, dan kedai
   const filteredMenus = useMemo(() => {
@@ -122,25 +160,123 @@ const MenuPage = () => {
         ))}
       </div>
 
-      {/* Filter Kedai Kopi (Opsional Pills) */}
+      {/* Filter Kedai Kopi (Dropdown) */}
       {uniqueCafes.length > 0 && (
-        <div className="cafe-filter-bar">
+        <div className="cafe-filter-dropdown-container" ref={dropdownRef}>
           <span className="cafe-filter-label">Filter Kedai:</span>
-          <button
-            className={`filter-pill-sm ${selectedCafe === 'Semua' ? 'active' : ''}`}
-            onClick={() => setSelectedCafe('Semua')}
-          >
-            Semua Kedai ({menus.length})
-          </button>
-          {uniqueCafes.map((c) => (
+          
+          <div className="cafe-dropdown-control">
             <button
-              key={c.id}
-              className={`filter-pill-sm ${selectedCafe === c.id ? 'active' : ''}`}
-              onClick={() => setSelectedCafe(c.id)}
+              type="button"
+              className={`cafe-dropdown-btn ${isCafeDropdownOpen ? 'active' : ''} ${selectedCafe !== 'Semua' ? 'filtered' : ''}`}
+              onClick={() => setIsCafeDropdownOpen((prev) => !prev)}
+              aria-haspopup="listbox"
+              aria-expanded={isCafeDropdownOpen}
             >
-              🏛️ {c.name}
+              <span className="cafe-dropdown-icon">
+                {selectedCafe === 'Semua' ? '🏛️' : '☕'}
+              </span>
+              <span className="cafe-dropdown-label">
+                {selectedCafeObj ? selectedCafeObj.name : `Semua Kedai (${menus.length})`}
+              </span>
+              {selectedCafeObj && (
+                <span className="cafe-dropdown-pill-count">
+                  {selectedCafeObj.count} menu
+                </span>
+              )}
+              <svg
+                className={`cafe-dropdown-arrow ${isCafeDropdownOpen ? 'open' : ''}`}
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
             </button>
-          ))}
+
+            {/* Tombol Clear / Reset Cepat jika sedang memfilter kedai tertentu */}
+            {selectedCafe !== 'Semua' && (
+              <button
+                type="button"
+                className="cafe-dropdown-reset-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedCafe('Semua');
+                }}
+                title="Tampilkan Semua Kedai"
+                aria-label="Reset filter kedai"
+              >
+                ✕
+              </button>
+            )}
+
+            {/* Dropdown Menu List */}
+            {isCafeDropdownOpen && (
+              <div className="cafe-dropdown-popover" role="listbox">
+                <div className="cafe-dropdown-popover-header">
+                  <span>PILIH KEDAI KOPI</span>
+                  <span className="popover-meta">{uniqueCafes.length} Kedai Tersedia</span>
+                </div>
+
+                <div className="cafe-dropdown-popover-list">
+                  {/* Opsi Semua Kedai */}
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={selectedCafe === 'Semua'}
+                    className={`cafe-dropdown-item ${selectedCafe === 'Semua' ? 'selected' : ''}`}
+                    onClick={() => {
+                      setSelectedCafe('Semua');
+                      setIsCafeDropdownOpen(false);
+                    }}
+                  >
+                    <div className="item-left">
+                      <span className="item-icon">✨</span>
+                      <span className="item-name">Semua Kedai</span>
+                    </div>
+                    <div className="item-right">
+                      <span className="item-badge">{menus.length} menu</span>
+                      {selectedCafe === 'Semua' && <span className="item-check">✓</span>}
+                    </div>
+                  </button>
+
+                  <div className="cafe-dropdown-separator"></div>
+
+                  {/* Daftar Pilihan Kedai */}
+                  {uniqueCafes.map((c) => {
+                    const isSelected = selectedCafe === c.id;
+                    return (
+                      <button
+                        key={c.id}
+                        type="button"
+                        role="option"
+                        aria-selected={isSelected}
+                        className={`cafe-dropdown-item ${isSelected ? 'selected' : ''}`}
+                        onClick={() => {
+                          setSelectedCafe(c.id);
+                          setIsCafeDropdownOpen(false);
+                        }}
+                      >
+                        <div className="item-left">
+                          <span className="item-icon">🏛️</span>
+                          <span className="item-name">{c.name}</span>
+                        </div>
+                        <div className="item-right">
+                          <span className="item-badge">{c.count} menu</span>
+                          {isSelected && <span className="item-check">✓</span>}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

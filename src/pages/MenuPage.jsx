@@ -168,7 +168,7 @@ const MenuPage = () => {
             className={`filter-pill ${selectedCategory === cat ? 'active' : ''}`}
             onClick={() => handleCategoryChange(cat)}
           >
-            {cat === 'Semua' ? '✨ Semua Jenis' : cat === 'Espresso' ? '☕ Espresso Based' : cat === 'Manual' ? '⚗️ Manual Brew' : '🍵 Non-Coffee'}
+            {cat === 'Semua' ? 'Semua Jenis' : cat === 'Espresso' ? 'Espresso Based' : cat === 'Manual' ? 'Manual Brew' : 'Non-Coffee'}
           </button>
         ))}
       </div>
@@ -188,9 +188,6 @@ const MenuPage = () => {
                 aria-haspopup="listbox"
                 aria-expanded={isCafeDropdownOpen}
               >
-                <span className="cafe-dropdown-icon">
-                  {selectedCafe === 'Semua' ? '🏛️' : '☕'}
-                </span>
                 <span className="cafe-dropdown-label">
                   {selectedCafeObj ? selectedCafeObj.name : `Semua Kedai (${menus.length})`}
                 </span>
@@ -251,7 +248,6 @@ const MenuPage = () => {
                       }}
                     >
                       <div className="item-left">
-                        <span className="item-icon">✨</span>
                         <span className="item-name">Semua Kedai</span>
                       </div>
                       <div className="item-right">
@@ -278,7 +274,6 @@ const MenuPage = () => {
                           }}
                         >
                           <div className="item-left">
-                            <span className="item-icon">🏛️</span>
                             <span className="item-name">{c.name}</span>
                           </div>
                           <div className="item-right">
@@ -299,17 +294,20 @@ const MenuPage = () => {
         <div className="sort-filter-dropdown-container">
           <span className="sort-filter-label">Urutkan:</span>
           <div className="sort-select-wrapper">
-            <span className="sort-icon-badge">⇅</span>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="sort-svg-icon">
+              <path d="M7 15l5 5 5-5"></path>
+              <path d="M7 9l5-5 5 5"></path>
+            </svg>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="sort-native-select"
               aria-label="Urutkan Harga Menu Kopi"
             >
-              <option value="price-asc">💵 Harga: Termurah → Termahal</option>
-              <option value="price-desc">💎 Harga: Termahal → Termurah</option>
-              <option value="default">✨ Rekomendasi Menu</option>
-              <option value="name-asc">🔤 Nama (A - Z)</option>
+              <option value="price-asc">Harga: Termurah ke Termahal</option>
+              <option value="price-desc">Harga: Termahal ke Termurah</option>
+              <option value="default">Rekomendasi</option>
+              <option value="name-asc">Nama (A - Z)</option>
             </select>
           </div>
         </div>
@@ -368,7 +366,10 @@ const MenuPage = () => {
               >
                 {/* Info Kedai Kopi Penyaji di Atas Gambar */}
                 <div className="card-cafe-bar">
-                  <span className="cafe-bar-icon">🏛️</span>
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="cafe-bar-svg">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
                   <span className="cafe-bar-name" title={cafeName}>{cafeName}</span>
                 </div>
 
@@ -407,12 +408,12 @@ const MenuPage = () => {
                   <div className="card-meta-line">
                     <p className="card-price">{formatRupiah(menu.price)}</p>
                     {menu.serving_size && (
-                      <span className="card-size-tag">📏 {menu.serving_size}</span>
+                      <span className="card-size-tag">{menu.serving_size}</span>
                     )}
                   </div>
                   {menu.ingredients && (
                     <p className="card-ingredients-line" title={menu.ingredients}>
-                      <span className="card-ingredients-label">🌿 Bahan:</span> {menu.ingredients}
+                      <span className="card-ingredients-label">Bahan:</span> {menu.ingredients}
                     </p>
                   )}
                   <p className="card-desc-snippet">

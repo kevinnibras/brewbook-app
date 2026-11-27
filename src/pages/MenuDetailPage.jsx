@@ -91,7 +91,7 @@ const MenuDetailPage = () => {
               </span>
               {menu.serving_size && (
                 <span className="size-pill-image">
-                  📏 {menu.serving_size}
+                  {menu.serving_size}
                 </span>
               )}
             </div>
@@ -104,11 +104,11 @@ const MenuDetailPage = () => {
                 <h1 className="detail-title">{menu.name}</h1>
                 <div className="detail-header-badges">
                   <span className="badge-detail-sub category-sub">
-                    🏷️ {menu.categories?.name || 'Kopi'}
+                    {menu.categories?.name || 'Kopi'}
                   </span>
                   {menu.serving_size && (
                     <span className="badge-detail-sub size-sub">
-                      📏 Porsi: <strong>{menu.serving_size}</strong>
+                      Porsi: <strong>{menu.serving_size}</strong>
                     </span>
                   )}
                 </div>
@@ -122,9 +122,9 @@ const MenuDetailPage = () => {
             {/* Banner Kedai Kopi Penyaji */}
             <div className="detail-cafe-banner">
               <div className="detail-cafe-info">
-                <span className="detail-cafe-label">🏛️ Kedai Penyaji Menu Ini:</span>
+                <span className="detail-cafe-label">Kedai Penyaji Menu Ini:</span>
                 <h3 className="detail-cafe-name">{menu.cafes?.name || 'Kedai Kopi Semarang'}</h3>
-                <p className="detail-cafe-address">📍 {menu.cafes?.address || 'Semarang, Jawa Tengah'}</p>
+                <p className="detail-cafe-address">{menu.cafes?.address || 'Semarang, Jawa Tengah'}</p>
               </div>
               {(menu.cafe_id || menu.cafes?.id) && (
                 <button
@@ -139,7 +139,6 @@ const MenuDetailPage = () => {
             {/* Deskripsi Rasa & Karakter */}
             <div className="detail-section">
               <div className="section-title-wrap">
-                <span className="section-icon">☕</span>
                 <h3>Deskripsi Rasa & Karakter</h3>
               </div>
               <p className="detail-description">
@@ -150,7 +149,6 @@ const MenuDetailPage = () => {
             {/* Komposisi & Racikan Bahan (Ingredients) */}
             <div className="detail-section ingredients-section">
               <div className="section-title-wrap">
-                <span className="section-icon">🌿</span>
                 <h3>Komposisi & Racikan Bahan</h3>
               </div>
               <p className="ingredients-lead-text">
@@ -176,19 +174,19 @@ const MenuDetailPage = () => {
             {/* Grid Spesifikasi & Detail Penyajian */}
             <div className="detail-meta-box">
               <div className="meta-item">
-                <span className="meta-label">🏷️ Kategori</span>
+                <span className="meta-label">Kategori</span>
                 <span className="meta-value">{menu.categories?.name || '-'}</span>
               </div>
               <div className="meta-item">
-                <span className="meta-label">🏛️ Kedai Kopi</span>
+                <span className="meta-label">Kedai Kopi</span>
                 <span className="meta-value">{menu.cafes?.name || 'Kota Semarang'}</span>
               </div>
               <div className="meta-item">
-                <span className="meta-label">📏 Ukuran Saji</span>
+                <span className="meta-label">Ukuran Saji</span>
                 <span className="meta-value highlight-value">{menu.serving_size || '250 ml'}</span>
               </div>
               <div className="meta-item">
-                <span className="meta-label">❄️ Penyajian</span>
+                <span className="meta-label">Penyajian</span>
                 <span className="meta-value">
                   {menu.name.toLowerCase().includes('iced') || menu.name.toLowerCase().includes('float')
                     ? 'Dingin Berisi Es'
@@ -198,7 +196,7 @@ const MenuDetailPage = () => {
                 </span>
               </div>
               <div className="meta-item">
-                <span className="meta-label">⚡ Metode Racik</span>
+                <span className="meta-label">Metode Racik</span>
                 <span className="meta-value">
                   {menu.categories?.name?.includes('Manual')
                     ? 'Manual Filter Brewing'
@@ -208,7 +206,7 @@ const MenuDetailPage = () => {
                 </span>
               </div>
               <div className="meta-item">
-                <span className="meta-label">⏱️ Ketersediaan</span>
+                <span className="meta-label">Ketersediaan</span>
                 <span className="meta-value">Tersedia Setiap Hari</span>
               </div>
             </div>

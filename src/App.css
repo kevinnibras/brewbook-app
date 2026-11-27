@@ -3172,11 +3172,10 @@
   box-shadow: 0 2px 8px rgba(197, 137, 64, 0.14);
 }
 
-.sort-icon-badge {
-  font-size: 1rem;
-  font-weight: 700;
+.sort-svg-icon {
   color: var(--color-primary);
   margin-right: 6px;
+  flex-shrink: 0;
   pointer-events: none;
 }
 

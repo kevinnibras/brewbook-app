@@ -168,7 +168,7 @@ const ReviewSection = ({ itemId, itemName, type = 'menu' }) => {
     setComment('');
     setSelectedTags([]);
     setShowForm(false);
-    setToastMsg('🎉 Terima kasih! Ulasan Anda berhasil diterbitkan.');
+    setToastMsg('Ulasan Anda berhasil diterbitkan.');
     setTimeout(() => setToastMsg(''), 3500);
   };
 
@@ -176,7 +176,9 @@ const ReviewSection = ({ itemId, itemName, type = 'menu' }) => {
     <section className="detail-section reviews-section animate-fade-in">
       <div className="section-title-wrap between">
         <div className="title-left">
-          <span className="section-icon">⭐</span>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#C58940" stroke="#C58940" strokeWidth="1.2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
           <div>
             <h3>Ulasan & Pengalaman Pembeli</h3>
             <p className="section-subtext">
@@ -190,7 +192,7 @@ const ReviewSection = ({ itemId, itemName, type = 'menu' }) => {
           className="btn-write-review-toggle"
           onClick={() => setShowForm(!showForm)}
         >
-          {showForm ? '✕ Tutup Form' : '✍️ Tulis Ulasan'}
+          {showForm ? 'Tutup Form' : 'Tulis Ulasan'}
         </button>
       </div>
 
@@ -233,7 +235,7 @@ const ReviewSection = ({ itemId, itemName, type = 'menu' }) => {
       {/* Form Tulis Ulasan */}
       {showForm && (
         <form onSubmit={handleSubmit} className="review-form-card animate-fade-down">
-          <h4 className="form-heading">✍️ Bagikan Ulasan Anda untuk {itemName}</h4>
+          <h4 className="form-heading">Bagikan Ulasan Anda untuk {itemName}</h4>
           
           {/* Pilih Rating Bintang */}
           <div className="form-group">
@@ -365,7 +367,9 @@ const ReviewSection = ({ itemId, itemName, type = 'menu' }) => {
                 onClick={() => handleLike(rev.id)}
                 title="Tandai ulasan ini membantu"
               >
-                <span>👍</span>
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+                </svg>
                 <span>Membantu ({rev.likes || 0})</span>
               </button>
             </div>

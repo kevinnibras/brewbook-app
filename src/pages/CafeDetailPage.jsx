@@ -89,7 +89,7 @@ const CafeDetailPage = () => {
                 }}
               />
               <span className="hours-pill-large">
-                ⏱️ {cafe.open_hours || 'Buka setiap hari'}
+                {cafe.open_hours || 'Buka setiap hari'}
               </span>
             </div>
 
@@ -97,7 +97,10 @@ const CafeDetailPage = () => {
               <h1 className="detail-title">{cafe.name}</h1>
 
               <div className="cafe-info-banner">
-                <span className="icon">📍</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-banner-svg">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
                 <div>
                   <strong>Alamat Lengkap:</strong>
                   <p>{cafe.address || 'Semarang, Jawa Tengah'}</p>
@@ -127,7 +130,7 @@ const CafeDetailPage = () => {
           {/* Daftar Menu yang Dijual oleh Kedai Ini */}
           <div className="cafe-menus-section">
             <div className="section-title-row">
-              <h2 className="section-title">☕ Menu Kopi Pilihan di {cafe.name}</h2>
+              <h2 className="section-title">Menu Kopi Pilihan di {cafe.name}</h2>
               <span className="brand-badge">{cafeMenus.length} Menu Tersedia</span>
             </div>
 
@@ -148,7 +151,6 @@ const CafeDetailPage = () => {
                       tabIndex={0}
                     >
                       <div className="card-cafe-bar">
-                        <span className="cafe-bar-icon">🏛️</span>
                         <span className="cafe-bar-name">{cafe.name}</span>
                       </div>
                       <div className="card-image-wrapper">
@@ -183,12 +185,12 @@ const CafeDetailPage = () => {
                         <div className="card-meta-line">
                           <p className="card-price">{formatRupiah(menu.price)}</p>
                           {menu.serving_size && (
-                            <span className="card-size-tag">📏 {menu.serving_size}</span>
+                            <span className="card-size-tag">{menu.serving_size}</span>
                           )}
                         </div>
                         {menu.ingredients && (
                           <p className="card-ingredients-line" title={menu.ingredients}>
-                            <span className="card-ingredients-label">🌿 Bahan:</span> {menu.ingredients}
+                            <span className="card-ingredients-label">Bahan:</span> {menu.ingredients}
                           </p>
                         )}
                         <p className="card-desc-snippet">{menu.description}</p>

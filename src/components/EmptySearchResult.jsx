@@ -163,7 +163,7 @@ const EmptySearchResult = ({
                   className="suggestion-chip"
                   onClick={() => onSelectSuggestion(item)}
                 >
-                  🔍 {item}
+                  {item}
                 </button>
               ))}
             </div>

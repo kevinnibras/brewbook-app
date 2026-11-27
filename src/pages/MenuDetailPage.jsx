@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMenu } from '../hooks/useMenu.js';
 import { useFavorites } from '../context/FavoritesContext.jsx';
+import ReviewSection from '../components/ReviewSection.jsx';
 
 const DEFAULT_COFFEE_IMAGE = 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80';
 
@@ -72,7 +73,8 @@ const MenuDetailPage = () => {
 
       {/* Konten Detail Menu */}
       {!loading && !error && menu && (
-        <article className="detail-card">
+        <>
+          <article className="detail-card">
           <div className="detail-image-box">
             <img
               src={menu.image_url || DEFAULT_COFFEE_IMAGE}
@@ -212,6 +214,10 @@ const MenuDetailPage = () => {
             </div>
           </div>
         </article>
+
+        {/* Bagian Ulasan & Pengalaman Pembeli */}
+        <ReviewSection itemId={menu.id} itemName={menu.name} type="menu" />
+        </>
       )}
     </div>
   );

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useCafe } from '../hooks/useCafe.js';
 import { useMenus } from '../hooks/useMenus.js';
 import { useFavorites } from '../context/FavoritesContext.jsx';
+import ReviewSection from '../components/ReviewSection.jsx';
 
 const DEFAULT_CAFE_IMAGE = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&auto=format&fit=crop&q=80';
 const DEFAULT_COFFEE_IMAGE = 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80';
@@ -198,6 +199,9 @@ const CafeDetailPage = () => {
               </div>
             )}
           </div>
+
+          {/* Bagian Ulasan & Pengalaman Pelanggan Kedai */}
+          <ReviewSection itemId={cafe.id} itemName={cafe.name} type="cafe" />
         </>
       )}
     </div>

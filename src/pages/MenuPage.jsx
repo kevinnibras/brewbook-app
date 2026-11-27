@@ -2,6 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMenus } from '../hooks/useMenus.js';
 import { useFavorites } from '../context/FavoritesContext.jsx';
+import EmptySearchResult from '../components/EmptySearchResult.jsx';
 
 const DEFAULT_COFFEE_IMAGE = 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80';
 
@@ -16,6 +17,7 @@ const MenuPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(catParam);
   const [selectedCafe, setSelectedCafe] = useState('Semua');
+  const [sortBy, setSortBy] = useState('price-asc'); // Default urutkan dari harga termurah
   const [isCafeDropdownOpen, setIsCafeDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -74,9 +76,9 @@ const MenuPage = () => {
     };
   }, [isCafeDropdownOpen]);
 
-  // Filter menu berdasarkan query pencarian, kategori, dan kedai
+  // Filter menu berdasarkan query pencarian, kategori, kedai, dan urutan harga
   const filteredMenus = useMemo(() => {
-    return menus.filter((menu) => {
+    const result = menus.filter((menu) => {
       const query = searchQuery.toLowerCase();
       const matchSearch =
         menu.name?.toLowerCase().includes(query) ||
@@ -105,7 +107,18 @@ const MenuPage = () => {
 
       return matchSearch && matchCat && matchCafe;
     });
-  }, [menus, searchQuery, selectedCategory, selectedCafe]);
+
+    // Urutkan (Sorting)
+    if (sortBy === 'price-asc') {
+      result.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+    } else if (sortBy === 'price-desc') {
+      result.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+    } else if (sortBy === 'name-asc') {
+      result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    }
+
+    return result;
+  }, [menus, searchQuery, selectedCategory, selectedCafe, sortBy]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -160,125 +173,147 @@ const MenuPage = () => {
         ))}
       </div>
 
-      {/* Filter Kedai Kopi (Dropdown) */}
-      {uniqueCafes.length > 0 && (
-        <div className="cafe-filter-dropdown-container" ref={dropdownRef}>
-          <span className="cafe-filter-label">Filter Kedai:</span>
-          
-          <div className="cafe-dropdown-control">
-            <button
-              type="button"
-              className={`cafe-dropdown-btn ${isCafeDropdownOpen ? 'active' : ''} ${selectedCafe !== 'Semua' ? 'filtered' : ''}`}
-              onClick={() => setIsCafeDropdownOpen((prev) => !prev)}
-              aria-haspopup="listbox"
-              aria-expanded={isCafeDropdownOpen}
-            >
-              <span className="cafe-dropdown-icon">
-                {selectedCafe === 'Semua' ? '🏛️' : '☕'}
-              </span>
-              <span className="cafe-dropdown-label">
-                {selectedCafeObj ? selectedCafeObj.name : `Semua Kedai (${menus.length})`}
-              </span>
-              {selectedCafeObj && (
-                <span className="cafe-dropdown-pill-count">
-                  {selectedCafeObj.count} menu
-                </span>
-              )}
-              <svg
-                className={`cafe-dropdown-arrow ${isCafeDropdownOpen ? 'open' : ''}`}
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-
-            {/* Tombol Clear / Reset Cepat jika sedang memfilter kedai tertentu */}
-            {selectedCafe !== 'Semua' && (
+      {/* Toolbar Filter Kedai & Urutkan Harga */}
+      <div className="menu-toolbar-row">
+        {/* Filter Kedai Kopi (Dropdown) */}
+        {uniqueCafes.length > 0 && (
+          <div className="cafe-filter-dropdown-container" ref={dropdownRef}>
+            <span className="cafe-filter-label">Filter Kedai:</span>
+            
+            <div className="cafe-dropdown-control">
               <button
                 type="button"
-                className="cafe-dropdown-reset-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedCafe('Semua');
-                }}
-                title="Tampilkan Semua Kedai"
-                aria-label="Reset filter kedai"
+                className={`cafe-dropdown-btn ${isCafeDropdownOpen ? 'active' : ''} ${selectedCafe !== 'Semua' ? 'filtered' : ''}`}
+                onClick={() => setIsCafeDropdownOpen((prev) => !prev)}
+                aria-haspopup="listbox"
+                aria-expanded={isCafeDropdownOpen}
               >
-                ✕
+                <span className="cafe-dropdown-icon">
+                  {selectedCafe === 'Semua' ? '🏛️' : '☕'}
+                </span>
+                <span className="cafe-dropdown-label">
+                  {selectedCafeObj ? selectedCafeObj.name : `Semua Kedai (${menus.length})`}
+                </span>
+                {selectedCafeObj && (
+                  <span className="cafe-dropdown-pill-count">
+                    {selectedCafeObj.count} menu
+                  </span>
+                )}
+                <svg
+                  className={`cafe-dropdown-arrow ${isCafeDropdownOpen ? 'open' : ''}`}
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
               </button>
-            )}
 
-            {/* Dropdown Menu List */}
-            {isCafeDropdownOpen && (
-              <div className="cafe-dropdown-popover" role="listbox">
-                <div className="cafe-dropdown-popover-header">
-                  <span>PILIH KEDAI KOPI</span>
-                  <span className="popover-meta">{uniqueCafes.length} Kedai Tersedia</span>
+              {/* Tombol Clear / Reset Cepat jika sedang memfilter kedai tertentu */}
+              {selectedCafe !== 'Semua' && (
+                <button
+                  type="button"
+                  className="cafe-dropdown-reset-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedCafe('Semua');
+                  }}
+                  title="Tampilkan Semua Kedai"
+                  aria-label="Reset filter kedai"
+                >
+                  ✕
+                </button>
+              )}
+
+              {/* Dropdown Menu List */}
+              {isCafeDropdownOpen && (
+                <div className="cafe-dropdown-popover" role="listbox">
+                  <div className="cafe-dropdown-popover-header">
+                    <span>PILIH KEDAI KOPI</span>
+                    <span className="popover-meta">{uniqueCafes.length} Kedai Tersedia</span>
+                  </div>
+
+                  <div className="cafe-dropdown-popover-list">
+                    {/* Opsi Semua Kedai */}
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={selectedCafe === 'Semua'}
+                      className={`cafe-dropdown-item ${selectedCafe === 'Semua' ? 'selected' : ''}`}
+                      onClick={() => {
+                        setSelectedCafe('Semua');
+                        setIsCafeDropdownOpen(false);
+                      }}
+                    >
+                      <div className="item-left">
+                        <span className="item-icon">✨</span>
+                        <span className="item-name">Semua Kedai</span>
+                      </div>
+                      <div className="item-right">
+                        <span className="item-badge">{menus.length} menu</span>
+                        {selectedCafe === 'Semua' && <span className="item-check">✓</span>}
+                      </div>
+                    </button>
+
+                    <div className="cafe-dropdown-separator"></div>
+
+                    {/* Daftar Pilihan Kedai */}
+                    {uniqueCafes.map((c) => {
+                      const isSelected = selectedCafe === c.id;
+                      return (
+                        <button
+                          key={c.id}
+                          type="button"
+                          role="option"
+                          aria-selected={isSelected}
+                          className={`cafe-dropdown-item ${isSelected ? 'selected' : ''}`}
+                          onClick={() => {
+                            setSelectedCafe(c.id);
+                            setIsCafeDropdownOpen(false);
+                          }}
+                        >
+                          <div className="item-left">
+                            <span className="item-icon">🏛️</span>
+                            <span className="item-name">{c.name}</span>
+                          </div>
+                          <div className="item-right">
+                            <span className="item-badge">{c.count} menu</span>
+                            {isSelected && <span className="item-check">✓</span>}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
+              )}
+            </div>
+          </div>
+        )}
 
-                <div className="cafe-dropdown-popover-list">
-                  {/* Opsi Semua Kedai */}
-                  <button
-                    type="button"
-                    role="option"
-                    aria-selected={selectedCafe === 'Semua'}
-                    className={`cafe-dropdown-item ${selectedCafe === 'Semua' ? 'selected' : ''}`}
-                    onClick={() => {
-                      setSelectedCafe('Semua');
-                      setIsCafeDropdownOpen(false);
-                    }}
-                  >
-                    <div className="item-left">
-                      <span className="item-icon">✨</span>
-                      <span className="item-name">Semua Kedai</span>
-                    </div>
-                    <div className="item-right">
-                      <span className="item-badge">{menus.length} menu</span>
-                      {selectedCafe === 'Semua' && <span className="item-check">✓</span>}
-                    </div>
-                  </button>
-
-                  <div className="cafe-dropdown-separator"></div>
-
-                  {/* Daftar Pilihan Kedai */}
-                  {uniqueCafes.map((c) => {
-                    const isSelected = selectedCafe === c.id;
-                    return (
-                      <button
-                        key={c.id}
-                        type="button"
-                        role="option"
-                        aria-selected={isSelected}
-                        className={`cafe-dropdown-item ${isSelected ? 'selected' : ''}`}
-                        onClick={() => {
-                          setSelectedCafe(c.id);
-                          setIsCafeDropdownOpen(false);
-                        }}
-                      >
-                        <div className="item-left">
-                          <span className="item-icon">🏛️</span>
-                          <span className="item-name">{c.name}</span>
-                        </div>
-                        <div className="item-right">
-                          <span className="item-badge">{c.count} menu</span>
-                          {isSelected && <span className="item-check">✓</span>}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+        {/* Pengurutan Harga (Sort Harga Murah ke Mahal) */}
+        <div className="sort-filter-dropdown-container">
+          <span className="sort-filter-label">Urutkan:</span>
+          <div className="sort-select-wrapper">
+            <span className="sort-icon-badge">⇅</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="sort-native-select"
+              aria-label="Urutkan Harga Menu Kopi"
+            >
+              <option value="price-asc">💵 Harga: Termurah → Termahal</option>
+              <option value="price-desc">💎 Harga: Termahal → Termurah</option>
+              <option value="default">✨ Rekomendasi Menu</option>
+              <option value="name-asc">🔤 Nama (A - Z)</option>
+            </select>
           </div>
         </div>
-      )}
+      </div>
 
       {/* State Loading */}
       {loading && (
@@ -298,23 +333,23 @@ const MenuPage = () => {
         </div>
       )}
 
-      {/* State Kosong Setelah Filter */}
+      {/* State Kosong Setelah Filter & Pencarian */}
       {!loading && !error && filteredMenus.length === 0 && (
-        <div className="state-box">
-          <p>Tidak ditemukan menu kopi yang cocok.</p>
-          {(searchQuery || selectedCategory !== 'Semua' || selectedCafe !== 'Semua') && (
-            <button
-              className="btn-retry mt-8"
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedCafe('Semua');
-                handleCategoryChange('Semua');
-              }}
-            >
-              Reset Filter
-            </button>
-          )}
-        </div>
+        <EmptySearchResult
+          query={searchQuery}
+          category={selectedCategory}
+          cafe={selectedCafe}
+          type="menu"
+          onReset={() => {
+            setSearchQuery('');
+            setSelectedCafe('Semua');
+            setSortBy('price-asc');
+            handleCategoryChange('Semua');
+          }}
+          onSelectSuggestion={(suggestion) => {
+            setSearchQuery(suggestion);
+          }}
+        />
       )}
 
       {/* Daftar Menu Kopi */}

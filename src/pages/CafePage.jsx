@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCafes } from '../hooks/useCafes.js';
 import { useFavorites } from '../context/FavoritesContext.jsx';
+import EmptySearchResult from '../components/EmptySearchResult.jsx';
 
 const DEFAULT_CAFE_IMAGE = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&auto=format&fit=crop&q=80';
 
@@ -67,16 +68,14 @@ const CafePage = () => {
         </div>
       )}
 
-      {/* State Kosong */}
+      {/* State Kosong Pencarian Kedai */}
       {!loading && !error && filteredCafes.length === 0 && (
-        <div className="state-box">
-          <p>Tidak ditemukan kedai kopi yang cocok.</p>
-          {searchQuery && (
-            <button className="btn-retry mt-8" onClick={() => setSearchQuery('')}>
-              Reset Pencarian
-            </button>
-          )}
-        </div>
+        <EmptySearchResult
+          query={searchQuery}
+          type="cafe"
+          onReset={() => setSearchQuery('')}
+          onSelectSuggestion={(suggestion) => setSearchQuery(suggestion)}
+        />
       )}
 
       {/* Daftar Kedai */}
